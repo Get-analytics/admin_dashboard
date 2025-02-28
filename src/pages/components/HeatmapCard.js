@@ -20,7 +20,7 @@ const HeatmapCard = () => {
           setError(null);
 
           const updatedCategory = category === 'Web' ? 'weblink' : category;
-          const apiUrl = 'http://localhost:5000/api/v1/web/heatmap';
+          const apiUrl = 'https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/heatmap';
           const requestBody = {
             uuid,
             url,

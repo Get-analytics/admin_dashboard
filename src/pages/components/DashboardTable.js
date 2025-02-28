@@ -87,7 +87,7 @@ const DashboardTable = ({
     const id = parts[parts.length - 1];
 
     try {
-      const response = await fetch("http://localhost:5000/api/v1/removesession", {
+      const response = await fetch("https://admin-dashboard-backend-gqqz.onrender.com/api/v1/removesession", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ shortId: id, mimeType }),

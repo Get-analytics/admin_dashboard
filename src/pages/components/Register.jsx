@@ -25,7 +25,7 @@ const Register = () => {
     e.preventDefault();
     try {
       const payload = { username, email, password };
-      const response = await axios.post("http://localhost:5000/api/v1/register", payload);
+      const response = await axios.post("https://admin-dashboard-backend-gqqz.onrender.com/api/v1/register", payload);
       toast.success("Registration successful");
       navigate("/login"); // Redirect to login after successful registration
     } catch (error) {

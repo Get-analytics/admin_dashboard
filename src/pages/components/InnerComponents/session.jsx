@@ -21,10 +21,10 @@ const Session = () => {
 
           const updatedCategory = category === "Web" ? "weblink" : category;
           const apiEndpoints = {
-            Pdf: "http://localhost:5000/api/v1/pdf/session",
-            weblink: "http://localhost:5000/api/v1/web/session",
-            Video: "http://localhost:5000/api/v1/video/session",
-            Docx: "http://localhost:5000/api/v1/docx/session",
+            Pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/session",
+            weblink: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/session",
+            Video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/session",
+            Docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/session",
           };
 
           const apiUrl = apiEndpoints[updatedCategory];

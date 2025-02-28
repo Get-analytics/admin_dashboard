@@ -33,7 +33,7 @@ const VideoWithAdvancedFeatures = () => {
         if (!uuid || !token || !url || !category) return;
 
         // API endpoint
-        const endpoint = "http://localhost:5000/api/v1/video/viewanalytics";
+        const endpoint = "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/viewanalytics";
 
         const response = await fetch(endpoint, {
           method: "POST",

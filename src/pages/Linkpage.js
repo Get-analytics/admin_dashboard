@@ -236,9 +236,9 @@ const Linkpage = () => {
       if (response.status === 200) {
         let link = "";
         if (type === "url" && response.data.shortenedUrl) {
-          link = `https://admin-dashboard-backend-gqqz.onrender.com/${response.data.shortenedUrl.shortId}`;
+          link = `https://filescence-rho.vercel.app//${response.data.shortenedUrl.shortId}`;
         } else if (type === "file" && response.data.shortId) {
-          link = `https://admin-dashboard-backend-gqqz.onrender.com/${response.data.shortId}`;
+          link = `https://filescence-rho.vercel.app/${response.data.shortId}`;
         }
         setGeneratedLink(link);
         setIsModalVisible(true);

@@ -70,7 +70,7 @@ const Linkpage = () => {
   const fetchDashboardData = async (authToken, UUID) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/client/dashboard",
+        "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/client/dashboard",
         { authToken, UUID }
       );
       if (response.status === 200) {
@@ -107,7 +107,7 @@ const Linkpage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/analytics",
+        "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/analytics",
         payload
       );
       // Process the response as needed:
@@ -222,11 +222,11 @@ const Linkpage = () => {
 
     try {
       if (type === "url") {
-        apiEndpoint = "http://localhost:5000/api/v1/linkupload";
+        apiEndpoint = "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/linkupload";
         payload = { shortId: randomId, originalUrl: url, uuid: userInfo.uuid };
         headers["Content-Type"] = "application/json";
       } else if (type === "file") {
-        apiEndpoint = "http://localhost:5000/api/v1/fileupload";
+        apiEndpoint = "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/fileupload";
         payload = new FormData();
         payload.append("shortId", randomId);
         payload.append("file", file);
@@ -236,9 +236,9 @@ const Linkpage = () => {
       if (response.status === 200) {
         let link = "";
         if (type === "url" && response.data.shortenedUrl) {
-          link = `http://localhost:3000/${response.data.shortenedUrl.shortId}`;
+          link = `https://admin-dashboard-backend-gqqz.onrender.com/${response.data.shortenedUrl.shortId}`;
         } else if (type === "file" && response.data.shortId) {
-          link = `http://localhost:3000/${response.data.shortId}`;
+          link = `https://admin-dashboard-backend-gqqz.onrender.com/${response.data.shortId}`;
         }
         setGeneratedLink(link);
         setIsModalVisible(true);

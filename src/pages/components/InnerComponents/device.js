@@ -28,10 +28,10 @@ const Device = () => {
       setError(null);
 
       const apiEndpoints = {
-        pdf: "http://localhost:5000/api/v1/pdf/device",
-        weblink: "http://localhost:5000/api/v1/web/device",
-        video: "http://localhost:5000/api/v1/video/device",
-        docx: "http://localhost:5000/api/v1/docx/device",
+        pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/device",
+        weblink: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/device",
+        video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/device",
+        docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/device",
       };
 
       const apiUrl = apiEndpoints[updatedCategory];

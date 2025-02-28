@@ -29,8 +29,8 @@ const Mostviewpage = () => {
         // Determine the API endpoint dynamically
         const endpoint =
           category === "Docx" || category === "Doc"
-            ? "http://localhost:5000/api/v1/docx/viewanalytics"
-            : "http://localhost:5000/api/v1/pdf/viewanalytics";
+            ? "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/viewanalytics"
+            : "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/viewanalytics";
   
         const response = await fetch(endpoint, {
           method: "POST",

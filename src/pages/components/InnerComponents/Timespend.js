@@ -28,10 +28,10 @@ const Timespend = () => {
       setError(null);
   
       const apiEndpoints = {
-        pdf: "http://localhost:5000/api/v1/pdf/timespend",
-        weblink: "http://localhost:5000/api/v1/web/timespend",
-        Video: "http://localhost:5000/api/v1/video/timespend",
-        docx: "http://localhost:5000/api/v1/docx/timespend",
+        pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/timespend",
+        weblink: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/timespend",
+        Video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/timespend",
+        docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/timespend",
       };
   
       const apiUrl = apiEndpoints[updatedCategory];

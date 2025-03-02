@@ -62,7 +62,7 @@ const Linkpage = () => {
       // Delay API call by 3 seconds
       setTimeout(() => {
         fetchDashboardData(token, uuid);
-      }, 3000);
+      }, 500);
     }
   }, [navigate]);
 

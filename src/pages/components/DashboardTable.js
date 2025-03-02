@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table, Tooltip, Modal, Button, ConfigProvider } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -35,10 +35,10 @@ const DashboardTable = ({
 }) => {
   const navigate = useNavigate();
   const tokenStr = localStorage.getItem("AuthToken");
-  
+
   // Use the context to get and set the record data
   const { saveRecord } = useRecordContext();
-  console.log(saveRecord, "saved data")
+  console.log(saveRecord, "saved data");
 
   // State for controlling the modal and storing the selected record.
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -112,6 +112,34 @@ const DashboardTable = ({
     setSelectedRecord(null);
   };
 
+  // Helper function to parse the timeAgo string into a timestamp
+  const parseTimeAgoToDate = (timeAgo) => {
+    const now = new Date();
+    const regex = /(\d+)\s*(minute|hour|day)s?\s*ago/;
+    const match = timeAgo.match(regex);
+    if (match) {
+      const value = parseInt(match[1]);
+      const unit = match[2];
+      if (unit === "minute") {
+        now.setMinutes(now.getMinutes() - value);
+      } else if (unit === "hour") {
+        now.setHours(now.getHours() - value);
+      } else if (unit === "day") {
+        now.setDate(now.getDate() - value);
+      }
+    }
+    return now;
+  };
+
+  // Flatten and sort the data by timeAgo
+  const sortedData = Object.values(data)
+    .flat() // Flatten the arrays of categories into one array
+    .map((record) => ({
+      ...record,
+      parsedTimeAgo: parseTimeAgoToDate(record.timeAgo), // Add parsed time
+    }))
+    .sort((a, b) => b.parsedTimeAgo - a.parsedTimeAgo); // Sort by parsedTimeAgo
+
   const columns = [
     {
       title: "Id",
@@ -166,22 +194,31 @@ const DashboardTable = ({
             padding: "0 10px",
           }}
           onClick={() => {
-            // Save the record data to context when navigating
-            saveRecord({
-              uuid: record.key,
-              token: tokenStr,
-              url: record.url,
-              category: record.category,
-            });
+            // Extract the analyticsId from the URL by splitting it
+            const urlParts = record.url.split("https://filescence-rho.vercel.app/");
+            const analyticsId = urlParts[1]; // This will be the part after the domain
 
-            navigate("/dashboard", {
-              state: {
+            if (analyticsId) {
+              // Save the record data to context when navigating
+              saveRecord({
                 uuid: record.key,
                 token: tokenStr,
                 url: record.url,
                 category: record.category,
-              },
-            });
+              });
+
+              // Navigate using the extracted analyticsId and category
+              navigate(`/dashboard/${record.category}/${analyticsId}`, {
+                state: {
+                  uuid: record.key,
+                  token: tokenStr,
+                  url: record.url,
+                  category: record.category,
+                },
+              });
+            } else {
+              console.error("Invalid URL format");
+            }
           }}
         >
           View Analytics
@@ -204,12 +241,12 @@ const DashboardTable = ({
   return (
     <>
       <Table
-        dataSource={data}
+        dataSource={sortedData} // Use the sorted data
         columns={columns}
         pagination={{
           current: currentPage,
           pageSize: pageSize,
-          total: data.length,
+          total: sortedData.length,
           onChange: (page) => setCurrentPage(page),
         }}
       />

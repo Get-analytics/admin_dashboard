@@ -6,10 +6,8 @@ import Login from "./pages/components/Login";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import IframeView from '../src/pages/components/InnerComponents/iframeview'
-// Import your RecordProvider
 import { RecordProvider } from "./context/RecordContext";
 import Register from "./pages/components/Register";
-
 
 function App() {
   return (
@@ -22,7 +20,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/linkpage" element={<Linkpage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            
+            {/* Update the Dashboard route to accept category and analyticsId */}
+            <Route path="/dashboard/:category/:analyticsId" element={<Dashboard />} />
+            
             <Route path="/iframeview" element={<IframeView />} />
           </Routes>
         </div>

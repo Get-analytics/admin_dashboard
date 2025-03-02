@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./Metrics.css";
-import { useLocation, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useRecordContext } from "../../context/RecordContext";
-import { useSpring, animated } from "@react-spring/web"; // Import react-spring
+import { useSpring, animated } from "@react-spring/web";
+import { 
+  TeamOutlined, 
+  ClockCircleOutlined, 
+  UserOutlined, 
+  PieChartOutlined, 
+  RightOutlined 
+} from "@ant-design/icons";
 
 const metrics = [
-  { title: "Total Sessions", value: "0", icon: "group.svg", showLink: true },
-  { title: "Time Spent", value: "0h 0m", icon: "time.svg", showLink: true },
-  { title: "Unique Visitors", value: "0", icon: "menu.svg", showLink: false },
-  { title: "Bounce Rate", value: "0%", icon: "Bounce.svg", showLink: false },
+  { title: "Total Sessions", value: "0", icon: <TeamOutlined style={{ fontSize: "24px" }} />, showLink: true },
+  { title: "Time Spent", value: "0h 0m", icon: <ClockCircleOutlined style={{ fontSize: "24px" }} />, showLink: true },
+  { title: "Unique Visitors", value: "0", icon: <UserOutlined style={{ fontSize: "24px" }} />, showLink: false },
+  { title: "Bounce Rate", value: "0%", icon: <PieChartOutlined style={{ fontSize: "24px" }} />, showLink: false },
 ];
 
 export default function Metrics({ setActiveMatrix, activeMatrix }) {
@@ -18,7 +25,6 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
   const [apiData, setApiData] = useState(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
-
   const [dataReceived, setDataReceived] = useState(false);
 
   const [animatedValues, setAnimatedValues] = useState({
@@ -30,7 +36,7 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
   });
 
   const [animationComplete, setAnimationComplete] = useState(false);
-  const [uniqueVisitorsClicked, setUniqueVisitorsClicked] = useState(false); // Added state for toggle
+  const [uniqueVisitorsClicked, setUniqueVisitorsClicked] = useState(false);
 
   useEffect(() => {
     if (uuid && url && category) {
@@ -38,7 +44,7 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
         try {
           setLoading(true);
           setError(null);
-  
+
           const updatedCategory = category === "Web" ? "weblink" : category;
           const apiEndpoints = {
             Pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/analytics",
@@ -46,32 +52,32 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
             Video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/analytics",
             Docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/analytics",
           };
-  
+
           const apiUrl = apiEndpoints[updatedCategory];
           if (!apiUrl) throw new Error("Invalid category");
-  
+
           const requestBody = {
             uuid,
             url,
             category: updatedCategory,
             ...(token && { token }),
           };
-  
+
           const response = await fetch(apiUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(requestBody),
           });
-  
-          if (!response.ok) throw new Error(`Error fetching analytics data: ${response.status}`);
-  
+
+          if (!response.ok)
+            throw new Error(`Error fetching analytics data: ${response.status}`);
+
           const data = await response.json();
           setApiData(data);
-  
           setDataReceived(true);
-  
-          const userCountsKey = updatedCategory.toLowerCase(); // Dynamic category key, like "pdf", "video", etc.
-          
+
+          const userCountsKey = updatedCategory.toLowerCase();
+
           setAnimatedValues({
             totalSessions: data.totalsession || 0,
             uniqueVisitors: data.userCounts?.newuser?.[userCountsKey] || 0,
@@ -86,11 +92,10 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
           setLoading(false);
         }
       };
-  
+
       fetchAnalyticsData();
     }
   }, [uuid, token, url, category]);
-  
 
   const formatTime = (totalSeconds) => {
     if (totalSeconds < 60) {
@@ -114,13 +119,14 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
     returnedVisitors: 0,
   };
 
-  const { totalsession, totalTimeSpent, bounceRate, returnedVisitors } = apiData || defaultMetrics;
+  const { totalsession, totalTimeSpent, bounceRate, returnedVisitors } =
+    apiData || defaultMetrics;
   const totalTimeSpentFormatted = formatTime(totalTimeSpent);
 
   const springValues = useSpring({
     to: {
       totalSessions: animatedValues.totalSessions,
-      uniqueVisitors: uniqueVisitorsClicked ? animatedValues.returnedVisitors : animatedValues.uniqueVisitors, // Toggle based on click
+      uniqueVisitors: uniqueVisitorsClicked ? animatedValues.returnedVisitors : animatedValues.uniqueVisitors,
       bounceRate: animatedValues.bounceRate,
       totalTimeSpent: animatedValues.totalTimeSpent,
     },
@@ -141,12 +147,11 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
 
   const updatedMetrics = metrics.map((item) => {
     let updatedTitle = item.title;
-  
-    // When the "Unique Visitors" metric is clicked, change the title
+
     if (item.title === "Unique Visitors" && uniqueVisitorsClicked) {
-      updatedTitle = "Returned Visitors"; // Change title to "Returned Visitors"
+      updatedTitle = "Returned Visitors";
     }
-  
+
     switch (updatedTitle) {
       case "Total Sessions":
         return { ...item, value: totalsession.toString() };
@@ -165,7 +170,7 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
         return item;
     }
   });
-  
+
   return (
     <div className="metrics-grid">
       {updatedMetrics.map((item, index) => (
@@ -174,21 +179,16 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
           className={`metric-card ${activeMatrix === item.title ? "active" : ""}`}
           onClick={() => {
             if (item.title === "Unique Visitors") {
-              setUniqueVisitorsClicked(!uniqueVisitorsClicked); // Toggle between unique and returned visitors on click
+              setUniqueVisitorsClicked(!uniqueVisitorsClicked);
             }
             item.showLink && setActiveMatrix(item.title);
           }}
         >
-          <div className="metric-icon">
-            <img src={item.icon} alt={item.title} />
-          </div>
+          <div className="metric-icon">{item.icon}</div>
           <div className="metric-content">
-          <p className="metric-title">
-  {item.title === "Unique Visitors" && uniqueVisitorsClicked
-    ? "Returned Visitors" // Change title to "Returned Visitors" when clicked
-    : item.title}
-</p>
-
+            <p className="metric-title">
+              {item.title === "Unique Visitors" && uniqueVisitorsClicked ? "Returned Visitors" : item.title}
+            </p>
             <h2 className="metric-value">
               <animated.div>
                 {item.title === "Total Sessions" && (
@@ -206,13 +206,14 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
               </animated.div>
             </h2>
           </div>
-          {item.showLink && (
+          {item.showLink && item.title !== "Total Sessions" && item.title !== "Time Spent" && (
             <Link to="/session" state={{ uuid, token, url, category }}>
-              <img src="export.svg" alt="Expand" className="metric-icon-right" />
+              <RightOutlined style={{ fontSize: "20px", color: "#fff" }} />
             </Link>
           )}
         </div>
       ))}
     </div>
   );
+  
 }

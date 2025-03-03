@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"; 
-import { FieldTimeOutlined } from '@ant-design/icons'; // Import FieldTimeOutlined from Ant Design
-import ReactApexChart from "react-apexcharts"; // Import React-ApexCharts
+import { FieldTimeOutlined } from '@ant-design/icons'; 
+import ReactApexChart from "react-apexcharts"; 
 import { useRecordContext } from "../../../context/RecordContext"; 
 import "./Timespend.css"; 
 
@@ -12,6 +12,7 @@ const Timespend = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [timeUnit, setTimeUnit] = useState("seconds");
 
   const categoryMapping = {
     web: "weblink",
@@ -62,9 +63,11 @@ const Timespend = () => {
       if (Array.isArray(result)) {
         const formattedData = result.map((item) => ({
           name: item.name, 
-          time: item.time, 
+          time: formatTime(item.time),  // Convert seconds to a readable time format
+          originalTime: Math.round(item.time), // Round the time to remove decimal points
         }));
         setData(formattedData);
+        determineTimeUnit(formattedData);
       } else {
         throw new Error("Unexpected API response format");
       }
@@ -75,7 +78,6 @@ const Timespend = () => {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     if (uuid && url && category) {
@@ -83,13 +85,39 @@ const Timespend = () => {
     }
   }, [uuid, url, category, token]);
 
-  const hasData = data.some((item) => item.time > 0);
+  const formatTime = (seconds) => {
+    const roundedSeconds = Math.round(seconds); // Round to nearest integer to fix decimals
+    const hours = Math.floor(roundedSeconds / 3600);
+    const minutes = Math.floor((roundedSeconds % 3600) / 60);
+    const remainingSeconds = roundedSeconds % 60;
 
-  // Prepare data for ApexChart (converting Recharts data format if necessary)
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`; // Format as hours and minutes
+    } else if (minutes > 0) {
+      return `${minutes}m ${remainingSeconds}s`; // Format as minutes and seconds
+    } else {
+      return `${remainingSeconds}s`; // Format as seconds
+    }
+  };
+
+  const determineTimeUnit = (formattedData) => {
+    const maxTime = Math.max(...formattedData.map(item => item.originalTime));
+    if (maxTime >= 3600) {
+      setTimeUnit("hours"); // More than 1 hour
+    } else if (maxTime >= 60) {
+      setTimeUnit("minutes"); // More than 1 minute
+    } else {
+      setTimeUnit("seconds"); // Less than a minute
+    }
+  };
+
+  const hasData = data.some((item) => item.originalTime > 0);
+
+  // Prepare data for ApexChart
   const apexData = {
     series: [{
       name: 'Time Spent',
-      data: data.map(item => item.time), // Convert time data to a format ApexCharts understands
+      data: data.map(item => item.originalTime), // Use original seconds for the graph
     }],
     options: {
       chart: {
@@ -110,11 +138,15 @@ const Timespend = () => {
         categories: data.map(item => item.name), // Map days to X-axis labels
       },
       yaxis: {
-        title: { text: 'Time (minutes)' },
+        title: { 
+          text: `Time (${timeUnit})`, // Dynamically change Y-axis label
+        },
         min: 0,
       },
       tooltip: {
-        y: { formatter: val => `${val} mins` },
+        y: {
+          formatter: (val) => `${formatTime(val)}`, // Show time in hours/minutes/seconds in tooltip
+        },
         theme: 'dark', // Optional: adds dark theme to the tooltip
         style: {
           fontSize: '12px',
@@ -140,7 +172,6 @@ const Timespend = () => {
       },
     },
   };
-  
 
   return (
     <div className="timeline-container">

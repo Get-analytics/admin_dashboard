@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Upload, Link, Filter, Settings } from "lucide-react";
+import { Upload, Link, Filter, Settings, User } from "lucide-react"; // Import User Icon
 import "./notch.css"; // Importing styles
 
 export default function Notch() {
@@ -11,14 +11,16 @@ export default function Notch() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="notch-container"
     >
-      <motion.img
-        src="image.jpg"
-        alt="User Avatar"
-        className="avatar"
+      {/* Replace image with User Icon */}
+      <motion.div
+        className="avatar-wrapper"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
-      />
+      >
+        <User size={10} strokeWidth={2} className="avatar"  style={ { color: '#6C4E2A'}}/>
+      </motion.div>
+      
       <div className="divider-notch"></div>
       <div className="icons">
         {[Upload, Link, Filter, Settings].map((Icon, index) => (

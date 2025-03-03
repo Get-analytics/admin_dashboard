@@ -15,7 +15,7 @@ import VideoWithAdvancedFeatures from "./components/Videoview";
 const Dashboard = () => {
   const { category, analyticsId } = useParams(); // Extract category and analyticsId from the URL path
   const { record, saveRecord } = useRecordContext(); // Get current record and saveRecord from context
-  const [activeMatrix, setActiveMatrix] = useState("default");
+  const [activeMatrix, setActiveMatrix] = useState("default"); //active matrix
 
   // Effect to save the record if it hasn't been set yet
   useEffect(() => {

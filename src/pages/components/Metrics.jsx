@@ -12,10 +12,10 @@ import {
 } from "@ant-design/icons";
 
 const metrics = [
-  { title: "Total Sessions", value: "0", icon: <TeamOutlined style={{ fontSize: "24px" }} />, showLink: true },
-  { title: "Time Spent", value: "0h 0m", icon: <ClockCircleOutlined style={{ fontSize: "24px" }} />, showLink: true },
-  { title: "Unique Visitors", value: "0", icon: <UserOutlined style={{ fontSize: "24px" }} />, showLink: false },
-  { title: "Bounce Rate", value: "0%", icon: <PieChartOutlined style={{ fontSize: "24px" }} />, showLink: false },
+  { title: "Total Sessions", value: "0", icon: <TeamOutlined style={{ fontSize: "24px",  color: '#6C4E2A' }} />, showLink: true },
+  { title: "Time Spent", value: "0h 0m", icon: <ClockCircleOutlined style={{ fontSize: "24px" ,  color: '#6C4E2A'}} />, showLink: true },
+  { title: "Unique Visitors", value: "0", icon: <UserOutlined style={{ fontSize: "24px" ,  color: '#6C4E2A'}} />, showLink: false },
+  { title: "Bounce Rate", value: "0%", icon: <PieChartOutlined style={{ fontSize: "24px",  color: '#6C4E2A' }} />, showLink: false },
 ];
 
 export default function Metrics({ setActiveMatrix, activeMatrix }) {

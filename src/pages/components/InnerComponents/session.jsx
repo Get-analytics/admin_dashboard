@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Chart from "react-apexcharts";
+import { FullscreenOutlined } from '@ant-design/icons'; // Import FullscreenOutlined from Ant Design
 import { useRecordContext } from "../../../context/RecordContext";
 import "./session.css";
 
@@ -132,7 +133,7 @@ const Session = () => {
     <div className="session-container">
       <div className="session-header">
         <div className="session-icon">
-          <img src="expanf.svg" alt="Expand" />
+          <FullscreenOutlined style={{ fontSize: '24px', color: '#6C4E2A' }} /> {/* Replace with FullscreenOutlined icon */}
         </div>
         <div className="sub-heading">
           <p className="card-heading">Overall</p>

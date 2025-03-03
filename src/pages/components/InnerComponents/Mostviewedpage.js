@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import "./Mostviewpage.css";
+import { FileSearchOutlined } from '@ant-design/icons';
 import { useRecordContext } from "../../../context/RecordContext";
 
 const Mostviewpage = () => {
@@ -110,19 +111,19 @@ const pageData = Object.entries(totalPageTime || {}).map(([page, timeInSeconds])
     <div className="analytics-container">
       {/* Header with Icon and Sub-heading */}
       <div className="session-header">
-        <div className="session-icon">
-          <img src="search.svg" alt="Expand" />
-        </div>
-        <div className="sub-heading">
-          <p className="click-count">Most viewed Page</p>
-        </div>
-      </div>
+  <div className="session-icon">
+    <FileSearchOutlined style={{ fontSize: '24px', color: '#7C5832' }} /> {/* Use the Ant Design FileSearch icon */}
+  </div>
+  <div className="sub-heading">
+    <p className="click-count">Most viewed Page</p>
+  </div>
+</div>
 
       {/* Most Viewed Page Section */}
       <div className="page-views">
         <div className="details-container">
           <div className="file-info">
-            <img src="image.png" alt="PDF Icon" className="file-image" />
+            <img src="https://t3.ftcdn.net/jpg/02/26/42/06/360_F_226420649_vlXjp3JyUrnW5EHY00dvhbqkVdUfyafj.jpg" alt="PDF Icon" className="file-image" />
             <div className="text-info">
               <p className="duration">{formatTime(averageTimeReadable)}</p>
               <p className="average-time">Avg Time Spend</p>

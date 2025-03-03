@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"; 
-import { useRecordContext } from "../../../context/RecordContext"; 
+import { FieldTimeOutlined } from '@ant-design/icons'; // Import FieldTimeOutlined from Ant Design
 import ReactApexChart from "react-apexcharts"; // Import React-ApexCharts
+import { useRecordContext } from "../../../context/RecordContext"; 
 import "./Timespend.css"; 
 
 const Timespend = () => {
@@ -145,7 +146,7 @@ const Timespend = () => {
     <div className="timeline-container">
       <div className="timeline-header">
         <div className="timeline-icon">
-          <img src="Timespend.svg" alt="Expand" />
+          <FieldTimeOutlined style={{ fontSize: '24px', color: '#6C4E2A' }} /> {/* Use FieldTimeOutlined icon */}
         </div>
         <div className="sub-heading">
           <p className="card-heading">Overall</p>

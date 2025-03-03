@@ -136,7 +136,7 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
       bounceRate: 0,
       totalTimeSpent: 0,
     },
-    config: { duration: 4000 },
+    config: { duration: 1000 },
     reset: dataReceived && !animationComplete,
     onRest: () => {
       if (!animationComplete) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Table, Tooltip, Modal, Button, ConfigProvider } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { Table, Tooltip, Modal, Button, ConfigProvider, Spin } from "antd";
+import { DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useRecordContext } from "../../context/RecordContext"; // Import the context
 import { createStyles, useTheme } from "antd-style";
@@ -43,6 +43,7 @@ const DashboardTable = ({
   // State for controlling the modal and storing the selected record.
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [loading, setLoading] = useState(false);  // Loading state for the delete request
 
   const { styles } = useStyle();
   const theme = useTheme();
@@ -86,6 +87,8 @@ const DashboardTable = ({
     const parts = url.split("/");
     const id = parts[parts.length - 1];
 
+    setLoading(true);  // Set loading to true when starting the delete request
+
     try {
       const response = await fetch("https://admin-dashboard-backend-gqqz.onrender.com/api/v1/removesession", {
         method: "DELETE",
@@ -94,8 +97,19 @@ const DashboardTable = ({
       });
       const result = await response.json();
       console.log("Delete result:", result);
+
+      // If the delete is successful, refresh the data
+      if (result.message === "Record deleted successfully.") {
+        // Optionally, fetch updated data here or trigger a state change to refresh the table
+        // In this case, we'll just reload the page after 1 second.
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);  // Refresh the page after a 1-second delay
+      }
     } catch (error) {
       console.error("Error deleting record:", error);
+    } finally {
+      setLoading(false);  // Set loading to false after the delete request is complete
     }
   };
 
@@ -194,12 +208,10 @@ const DashboardTable = ({
             padding: "0 10px",
           }}
           onClick={() => {
-            // Extract the analyticsId from the URL by splitting it
             const urlParts = record.url.split("https://filescence-rho.vercel.app/");
-            const analyticsId = urlParts[1]; // This will be the part after the domain
+            const analyticsId = urlParts[1];
 
             if (analyticsId) {
-              // Save the record data to context when navigating
               saveRecord({
                 uuid: record.key,
                 token: tokenStr,
@@ -207,7 +219,6 @@ const DashboardTable = ({
                 category: record.category,
               });
 
-              // Navigate using the extracted analyticsId and category
               navigate(`/dashboard/${record.category}/${analyticsId}`, {
                 state: {
                   uuid: record.key,
@@ -250,6 +261,11 @@ const DashboardTable = ({
           onChange: (page) => setCurrentPage(page),
         }}
       />
+      {loading && (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+        </div>
+      )}
       <ConfigProvider modal={{ classNames, styles: modalStyles }}>
         <Modal
           title="Confirm Delete"

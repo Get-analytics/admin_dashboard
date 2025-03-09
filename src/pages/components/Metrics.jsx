@@ -47,10 +47,10 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
 
           const updatedCategory = category === "Web" ? "weblink" : category;
           const apiEndpoints = {
-            Pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/analytics",
+            pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/analytics",
             weblink: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/analytics",
-            Video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/analytics",
-            Docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/analytics",
+            video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/analytics",
+            docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/analytics",
           };
 
           const apiUrl = apiEndpoints[updatedCategory];

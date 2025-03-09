@@ -29,7 +29,7 @@ const Mostviewpage = () => {
   
         // Determine the API endpoint dynamically
         const endpoint =
-          category === "Docx" || category === "Doc"
+          category === "docx" || category === "doc"
             ? "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/viewanalytics"
             : "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/viewanalytics";
   

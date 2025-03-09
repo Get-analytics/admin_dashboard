@@ -30,7 +30,7 @@ const Device = () => {
 
       const apiEndpoints = {
         pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/device",
-        weblink: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/device",
+        web: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/device",
         video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/device",
         docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/device",
       };

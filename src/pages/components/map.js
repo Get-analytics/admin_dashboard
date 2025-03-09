@@ -38,10 +38,10 @@ export default function TrafficSource() {
 
           const updatedCategory = category === "Web" ? "weblink" : category;
           const apiEndpoints = {
-            Pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/traffic",
+            pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/traffic",
             weblink: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/traffic",
-            Video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/traffic",
-            Docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/traffic",
+            video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/traffic",
+            docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/traffic",
           };
 
           const apiUrl = apiEndpoints[updatedCategory];

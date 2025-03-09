@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Table, Tooltip, Modal, Button, ConfigProvider, Spin } from "antd";
 import { DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { useRecordContext } from "../../context/RecordContext"; // Import the context
+import { useRecordContext } from "../../context/RecordContext";
 import { createStyles, useTheme } from "antd-style";
+import { toast } from "react-toastify";
 
 const useStyle = createStyles(({ token }) => ({
   "my-modal-body": {
@@ -36,14 +37,13 @@ const DashboardTable = ({
   const navigate = useNavigate();
   const tokenStr = localStorage.getItem("AuthToken");
 
-  // Use the context to get and set the record data
   const { saveRecord } = useRecordContext();
-  console.log(saveRecord, "saved data");
+  console.log("saveRecord from context:", saveRecord);
 
-  // State for controlling the modal and storing the selected record.
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
-  const [loading, setLoading] = useState(false);  // Loading state for the delete request
+  const [loading, setLoading] = useState(false);
+  const [tableLoading, setTableLoading] = useState(true);
 
   const { styles } = useStyle();
   const theme = useTheme();
@@ -78,6 +78,12 @@ const DashboardTable = ({
     },
   };
 
+  // Log the raw data prop for debugging purposes
+  useEffect(() => {
+    console.log("Raw data prop received in DashboardTable:", data);
+    setTableLoading(false);
+  }, [data]);
+
   const showModal = (record) => {
     setSelectedRecord(record);
     setIsModalOpen(true);
@@ -87,29 +93,30 @@ const DashboardTable = ({
     const parts = url.split("/");
     const id = parts[parts.length - 1];
 
-    setLoading(true);  // Set loading to true when starting the delete request
-
+    setLoading(true);
     try {
-      const response = await fetch("https://admin-dashboard-backend-gqqz.onrender.com/api/v1/removesession", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ shortId: id, mimeType }),
-      });
+      const response = await fetch(
+        "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/removesession",
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ shortId: id, mimeType }),
+        }
+      );
       const result = await response.json();
       console.log("Delete result:", result);
 
-      // If the delete is successful, refresh the data
       if (result.message === "Record deleted successfully.") {
-        // Optionally, fetch updated data here or trigger a state change to refresh the table
-        // In this case, we'll just reload the page after 1 second.
+        toast.success("Record deleted successfully!");
         setTimeout(() => {
           window.location.reload();
-        }, 1000);  // Refresh the page after a 1-second delay
+        }, 1000);
       }
     } catch (error) {
       console.error("Error deleting record:", error);
+      toast.error("Error deleting record.");
     } finally {
-      setLoading(false);  // Set loading to false after the delete request is complete
+      setLoading(false);
     }
   };
 
@@ -126,7 +133,7 @@ const DashboardTable = ({
     setSelectedRecord(null);
   };
 
-  // Helper function to parse the timeAgo string into a timestamp
+  // Helper: Convert timeAgo string to a Date object
   const parseTimeAgoToDate = (timeAgo) => {
     const now = new Date();
     const regex = /(\d+)\s*(minute|hour|day)s?\s*ago/;
@@ -145,34 +152,44 @@ const DashboardTable = ({
     return now;
   };
 
-  // Flatten and sort the data by timeAgo
+  // Map the data without altering the fileName property
   const sortedData = Object.values(data)
-    .flat() // Flatten the arrays of categories into one array
-    .map((record) => ({
-      ...record,
-      parsedTimeAgo: parseTimeAgoToDate(record.timeAgo), // Add parsed time
-    }))
-    .sort((a, b) => b.parsedTimeAgo - a.parsedTimeAgo); // Sort by parsedTimeAgo
+    .flat()
+    .map((record) => {
+      console.log("Mapped record:", record); // Check if fileName exists here
+      return {
+        ...record,
+        parsedTimeAgo: parseTimeAgoToDate(record.timeAgo),
+      };
+    })
+    .sort((a, b) => b.parsedTimeAgo - a.parsedTimeAgo);
 
   const columns = [
     {
       title: "Id",
       dataIndex: "key",
       key: "key",
-      render: (text, record, index) => (currentPage - 1) * pageSize + index + 1,
+      render: (text, record, index) =>
+        (currentPage - 1) * pageSize + index + 1,
     },
     {
       title: "URLs",
       dataIndex: "url",
       key: "url",
       ...getColumnSearchProps("url"),
-      render: (text) => {
-        const truncated = text.length > 25 ? text.substring(0, 25) + "..." : text;
+      render: (text, record) => {
+        console.log("Record in table column:", record);
+        const truncated =
+          text.length > 25 ? text.substring(0, 25) + "..." : text;
         return (
           <Tooltip title="Click to copy full URL" placement="top">
-            <span onClick={() => handleCopyUrl(text)} style={{ cursor: "pointer" }}>
-              {truncated}
-            </span>
+            <div onClick={() => handleCopyUrl(text)} style={{ cursor: "pointer" }}>
+              <span>{truncated}</span>
+              <br />
+              <span style={{ fontSize: "12px", color: "#888" }}>
+                {record.fileName || "No file name available"}
+              </span>
+            </div>
           </Tooltip>
         );
       },
@@ -200,17 +217,21 @@ const DashboardTable = ({
         <Button
           style={{
             backgroundColor: "#7C5832",
-            borderRadius: "15px",
-            height: "25px",
+            borderRadius: "20px",
+            height: "30px",
             cursor: "pointer",
             border: "none",
             color: "#fff",
-            padding: "0 10px",
+            padding: "0 12px",
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: "300",
           }}
           onClick={() => {
-            const urlParts = record.url.split("https://filescence-rho.vercel.app/");
+            const urlParts = record.url.split(
+              "https://filescence-rho.vercel.app/"
+            );
             const analyticsId = urlParts[1];
-
+  
             if (analyticsId) {
               saveRecord({
                 uuid: record.key,
@@ -218,7 +239,7 @@ const DashboardTable = ({
                 url: record.url,
                 category: record.category,
               });
-
+  
               navigate(`/dashboard/${record.category}/${analyticsId}`, {
                 state: {
                   uuid: record.key,
@@ -242,7 +263,11 @@ const DashboardTable = ({
       align: "center",
       render: (_, record) => (
         <DeleteOutlined
-          style={{ fontSize: "24px", color: "red", cursor: "pointer" }}
+          style={{
+            fontSize: "20px",
+            color: "#464646",
+            cursor: "pointer",
+          }}
           onClick={() => showModal(record)}
         />
       ),
@@ -251,16 +276,25 @@ const DashboardTable = ({
 
   return (
     <>
-      <Table
-        dataSource={sortedData} // Use the sorted data
-        columns={columns}
-        pagination={{
-          current: currentPage,
-          pageSize: pageSize,
-          total: sortedData.length,
-          onChange: (page) => setCurrentPage(page),
-        }}
-      />
+      {tableLoading ? (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+        </div>
+      ) : sortedData.length > 0 ? (
+        <Table
+          style={{ width: "56rem" }}
+          dataSource={sortedData}
+          columns={columns}
+          pagination={{
+            current: currentPage,
+            pageSize: pageSize,
+            total: sortedData.length,
+            onChange: (page) => setCurrentPage(page),
+          }}
+        />
+      ) : (
+        <div style={{ textAlign: "center", marginTop: "20px" }}></div>
+      )}
       {loading && (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
           <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />

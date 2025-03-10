@@ -3,19 +3,39 @@ import "./Metrics.css";
 import { Link } from "react-router-dom";
 import { useRecordContext } from "../../context/RecordContext";
 import { useSpring, animated } from "@react-spring/web";
-import { 
-  TeamOutlined, 
-  ClockCircleOutlined, 
-  UserOutlined, 
-  PieChartOutlined, 
-  RightOutlined 
+import {
+  TeamOutlined,
+  ClockCircleOutlined,
+  UserOutlined,
+  PieChartOutlined,
+  RightOutlined,
 } from "@ant-design/icons";
 
 const metrics = [
-  { title: "Total Sessions", value: "0", icon: <TeamOutlined style={{ fontSize: "24px",  color: '#6C4E2A' }} />, showLink: true },
-  { title: "Time Spent", value: "0h 0m", icon: <ClockCircleOutlined style={{ fontSize: "24px" ,  color: '#6C4E2A'}} />, showLink: true },
-  { title: "Unique Visitors", value: "0", icon: <UserOutlined style={{ fontSize: "24px" ,  color: '#6C4E2A'}} />, showLink: false },
-  { title: "Bounce Rate", value: "0%", icon: <PieChartOutlined style={{ fontSize: "24px",  color: '#6C4E2A' }} />, showLink: false },
+  {
+    title: "Total Sessions",
+    value: "0",
+    icon: <TeamOutlined style={{ fontSize: "24px", color: "#6C4E2A" }} />,
+    showLink: true,
+  },
+  {
+    title: "Time Spent",
+    value: "0h 0m",
+    icon: <ClockCircleOutlined style={{ fontSize: "24px", color: "#6C4E2A" }} />,
+    showLink: true,
+  },
+  {
+    title: "Unique Visitors",
+    value: "0",
+    icon: <UserOutlined style={{ fontSize: "24px", color: "#6C4E2A" }} />,
+    showLink: false,
+  },
+  {
+    title: "Bounce Rate",
+    value: "0%",
+    icon: <PieChartOutlined style={{ fontSize: "24px", color: "#6C4E2A" }} />,
+    showLink: false,
+  },
 ];
 
 export default function Metrics({ setActiveMatrix, activeMatrix }) {
@@ -48,7 +68,7 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
           const updatedCategory = category === "Web" ? "weblink" : category;
           const apiEndpoints = {
             pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/analytics",
-            web: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/analytics",
+            weblink: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/analytics",
             video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/analytics",
             docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/analytics",
           };
@@ -126,7 +146,9 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
   const springValues = useSpring({
     to: {
       totalSessions: animatedValues.totalSessions,
-      uniqueVisitors: uniqueVisitorsClicked ? animatedValues.returnedVisitors : animatedValues.uniqueVisitors,
+      uniqueVisitors: uniqueVisitorsClicked
+        ? animatedValues.returnedVisitors
+        : animatedValues.uniqueVisitors,
       bounceRate: animatedValues.bounceRate,
       totalTimeSpent: animatedValues.totalTimeSpent,
     },
@@ -187,33 +209,56 @@ export default function Metrics({ setActiveMatrix, activeMatrix }) {
           <div className="metric-icon">{item.icon}</div>
           <div className="metric-content">
             <p className="metric-title">
-              {item.title === "Unique Visitors" && uniqueVisitorsClicked ? "Returned Visitors" : item.title}
+              {item.title === "Unique Visitors" && uniqueVisitorsClicked
+                ? "Returned Visitors"
+                : item.title}
             </p>
             <h2 className="metric-value">
               <animated.div>
                 {item.title === "Total Sessions" && (
-                  <animated.span>{springValues.totalSessions.to((val) => Math.floor(val))}</animated.span>
+                  <animated.span>
+                    {springValues.totalSessions.to((val) => Math.floor(val))}
+                  </animated.span>
                 )}
                 {item.title === "Unique Visitors" && (
-                  <animated.span>{springValues.uniqueVisitors.to((val) => Math.floor(val))}</animated.span>
+                  <animated.span>
+                    {springValues.uniqueVisitors.to((val) => Math.floor(val))}
+                  </animated.span>
                 )}
                 {item.title === "Bounce Rate" && (
-                  <animated.span>{springValues.bounceRate.to((val) => `${val.toFixed(1)}%`)}</animated.span>
+                  <animated.span>
+                    {springValues.bounceRate.to((val) => `${val.toFixed(1)}%`)}
+                  </animated.span>
                 )}
                 {item.title === "Time Spent" && (
-                  <animated.span>{springValues.totalTimeSpent.to((val) => formatTime(val))}</animated.span>
+                  <animated.span>
+                    {springValues.totalTimeSpent.to((val) => formatTime(val))}
+                  </animated.span>
                 )}
               </animated.div>
             </h2>
           </div>
-          {item.showLink && item.title !== "Total Sessions" && item.title !== "Time Spent" && (
-            <Link to="/session" state={{ uuid, token, url, category }}>
-              <RightOutlined style={{ fontSize: "20px", color: "#fff" }} />
-            </Link>
+
+          {/* Conditionally render the export icon for Total Sessions and Time Spent */}
+          {(item.title === "Total Sessions" || item.title === "Time Spent") && (
+            <img
+              src="/export.svg"
+              alt="Export icon"
+              className="export-icon"
+            />
           )}
+
+          {/* This link only appears if showLink = true AND
+the title isn't 'Total Sessions' or 'Time Spent' */}
+          {item.showLink &&
+            item.title !== "Total Sessions" &&
+            item.title !== "Time Spent" && (
+              <Link to="/session" state={{ uuid, token, url, category }}>
+                <RightOutlined style={{ fontSize: "20px", color: "#fff" }} />
+              </Link>
+            )}
         </div>
       ))}
     </div>
   );
-  
 }

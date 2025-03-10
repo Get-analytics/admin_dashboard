@@ -29,12 +29,13 @@ const Timespend = () => {
       setLoading(true);
       setError(null);
   
-      const apiEndpoints = {
-        pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/timespend",
-        web: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/timespend",
-        Video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/timespend",
-        docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/timespend",
-      };
+     const apiEndpoints = {
+    pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/timespend",
+    web: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/timespend",
+    weblink: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/timespend",
+    Video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/timespend",
+    docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/timespend",
+};
   
       const apiUrl = apiEndpoints[updatedCategory];
       if (!apiUrl) {

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 import { Modal } from "antd";
@@ -138,9 +137,8 @@ export default function TrafficSource() {
           </span>{" "}
           |{" "} 
           <span className={view === "list" ? "active-view" : "inactive-view"} onClick={() => setView("list")}>
-          List View
+            List View
           </span>{" "}
-          {/* | <span className="inactive-view">Traffic Medium</span> */}
         </div>
       </div>
 
@@ -174,37 +172,35 @@ export default function TrafficSource() {
                   })
                 }
               </Geographies>
-              {markers.map((marker, i) => {
-                return (
-                  <Marker
-                    key={i}
-                    coordinates={marker.coordinates}
-                    onMouseEnter={() => setHoveredMarker(i)}
-                    onMouseLeave={() => setHoveredMarker(null)}
-                    onClick={() => setSelectedMarker(marker)}
-                    style={{ cursor: "pointer" }}
+              {markers.map((marker, i) => (
+                <Marker
+                  key={i}
+                  coordinates={marker.coordinates}
+                  onMouseEnter={() => setHoveredMarker(i)}
+                  onMouseLeave={() => setHoveredMarker(null)}
+                  onClick={() => setSelectedMarker(marker)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <circle
+                    r={hoveredMarker === i ? 10 : 5}
+                    fill={hoveredMarker === i ? "#FF4500" : "#F00"}
+                    stroke="#fff"
+                    strokeWidth={hoveredMarker === i ? 3 : 2}
+                  />
+                  <text
+                    textAnchor="middle"
+                    y={-15}
+                    style={{
+                      fontFamily: "system-ui",
+                      fill: hoveredMarker === i ? "#000" : "#5D5A6D",
+                      fontSize: hoveredMarker === i ? "14px" : "16px",
+                      fontWeight: "bold",
+                    }}
                   >
-                    <circle
-                      r={hoveredMarker === i ? 10 : 5}
-                      fill={hoveredMarker === i ? "#FF4500" : "#F00"}
-                      stroke="#fff"
-                      strokeWidth={hoveredMarker === i ? 3 : 2}
-                    />
-                    <text
-                      textAnchor="middle"
-                      y={hoveredMarker === i ? -15 : -15}
-                      style={{
-                        fontFamily: "system-ui",
-                        fill: hoveredMarker === i ? "#000" : "#5D5A6D",
-                        fontSize: hoveredMarker === i ? "14px" : "16px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {marker.name}
-                    </text>
-                  </Marker>
-                );
-              })}
+                    {marker.name}
+                  </text>
+                </Marker>
+              ))}
             </ComposableMap>
           </div>
         ) : (
@@ -218,22 +214,36 @@ export default function TrafficSource() {
                 </tr>
               </thead>
               <tbody>
-                {sessionData.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.country}</td>
-                    <td>
-                      {item.dailyAvg}{" "}
-                      {item.change === "up" ? <FaArrowUp className="icon up" /> : <FaArrowDown className="icon down" />}
-                      <div className="progress-bar">
-                        <div className={`progress ${item.change}`} style={{ width: `${item.progress}%` }}></div>
-                      </div>
-                    </td>
-                    <td>
-                      {item.views} <Eye className="icon eye" />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+  {sessionData.map((item, index) => {
+    // Extract the numeric portion of dailyAvg (e.g., "2.00%" -> 2.00)
+    const dailyAvgNum = parseFloat(item.dailyAvg.replace("%", "")) || 0;
+  
+    const ProgressrateBar = dailyAvgNum * 10;
+    return (
+      <tr key={index}>
+        <td>{item.country}</td>
+        <td>
+          {item.dailyAvg}{" "}
+          {/* Render up/down arrows conditionally */}
+          {item.change === "up" && <FaArrowUp className="icon up" />}
+          {item.change === "down" && <FaArrowDown className="icon down" />}
+
+          <div className="progress-bar">
+            {/* Use dailyAvgNum as the progress bar width */}
+            <div
+              className={`progress ${item.change}`}
+              style={{ width: `${ProgressrateBar}%` }}
+            ></div>
+          </div>
+        </td>
+        <td>
+          {item.views} <Eye className="icon eye" />
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
+
             </table>
           </div>
         )}

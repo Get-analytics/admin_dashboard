@@ -29,13 +29,12 @@ const Timespend = () => {
       setLoading(true);
       setError(null);
   
-     const apiEndpoints = {
-    pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/timespend",
-    web: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/timespend",
-    weblink: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/timespend",
-    Video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/timespend",
-    docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/timespend",
-};
+      const apiEndpoints = {
+        pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/timespend",
+        weblink: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/timespend",
+        video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/timespend",
+        docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/timespend",
+      };
   
       const apiUrl = apiEndpoints[updatedCategory];
       if (!apiUrl) {
@@ -64,8 +63,8 @@ const Timespend = () => {
       if (Array.isArray(result)) {
         const formattedData = result.map((item) => ({
           name: item.name, 
-          time: formatTime(item.time),  // Convert seconds to a readable time format
-          originalTime: Math.round(item.time), // Round the time to remove decimal points
+          time: item.time,  // Store original time in seconds
+          originalTime: Math.round(item.time), // Round to remove decimals
         }));
         setData(formattedData);
         determineTimeUnit(formattedData);
@@ -86,6 +85,27 @@ const Timespend = () => {
     }
   }, [uuid, url, category, token]);
 
+  const determineTimeUnit = (formattedData) => {
+    const maxTime = Math.max(...formattedData.map(item => item.originalTime));
+    if (maxTime >= 3600) {
+      setTimeUnit("hours"); // More than 1 hour
+    } else if (maxTime >= 60) {
+      setTimeUnit("minutes"); // More than 1 minute
+    } else {
+      setTimeUnit("seconds"); // Less than a minute
+    }
+  };
+
+  const scaleData = (data, unit) => {
+    // Scale the data based on the selected time unit
+    if (unit === "hours") {
+      return data.map(item => item.originalTime / 3600); // Convert to hours
+    } else if (unit === "minutes") {
+      return data.map(item => item.originalTime / 60); // Convert to minutes
+    }
+    return data.map(item => item.originalTime); // Default to seconds
+  };
+
   const formatTime = (seconds) => {
     const roundedSeconds = Math.round(seconds); // Round to nearest integer to fix decimals
     const hours = Math.floor(roundedSeconds / 3600);
@@ -101,24 +121,13 @@ const Timespend = () => {
     }
   };
 
-  const determineTimeUnit = (formattedData) => {
-    const maxTime = Math.max(...formattedData.map(item => item.originalTime));
-    if (maxTime >= 3600) {
-      setTimeUnit("hours"); // More than 1 hour
-    } else if (maxTime >= 60) {
-      setTimeUnit("minutes"); // More than 1 minute
-    } else {
-      setTimeUnit("seconds"); // Less than a minute
-    }
-  };
-
   const hasData = data.some((item) => item.originalTime > 0);
 
   // Prepare data for ApexChart
   const apexData = {
     series: [{
       name: 'Time Spent',
-      data: data.map(item => item.originalTime), // Use original seconds for the graph
+      data: scaleData(data, timeUnit), // Use scaled data based on the selected unit
     }],
     options: {
       chart: {
@@ -143,10 +152,28 @@ const Timespend = () => {
           text: `Time (${timeUnit})`, // Dynamically change Y-axis label
         },
         min: 0,
+        labels: {
+          formatter: (val) => {
+            if (timeUnit === "hours") {
+              return `${Math.round(val)}h`; // Format as hours
+            } else if (timeUnit === "minutes") {
+              return `${Math.round(val)}m`; // Format as minutes
+            }
+            return `${Math.round(val)}s`; // Format as seconds
+          },
+        },
       },
       tooltip: {
         y: {
-          formatter: (val) => `${formatTime(val)}`, // Show time in hours/minutes/seconds in tooltip
+          formatter: (val) => {
+            // Tooltip formatting based on unit (seconds, minutes, or hours)
+            if (timeUnit === "hours") {
+              return `${Math.round(val)}h`;
+            } else if (timeUnit === "minutes") {
+              return `${Math.round(val)}m`;
+            }
+            return `${Math.round(val)}s`;
+          },
         },
         theme: 'dark', // Optional: adds dark theme to the tooltip
         style: {

@@ -30,10 +30,10 @@ const Timespend = () => {
       setError(null);
   
       const apiEndpoints = {
-        pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/timespend",
-        weblink: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/timespend",
-        video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/timespend",
-        docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/timespend",
+        pdf: "https://admin-dashboard-backend-emwx.vercel.app/api/v1/pdf/timespend",
+        weblink: "https://admin-dashboard-backend-emwx.vercel.app/api/v1/web/timespend",
+        video: "https://admin-dashboard-backend-emwx.vercel.app/api/v1/video/timespend",
+        docx: "https://admin-dashboard-backend-emwx.vercel.app/api/v1/docx/timespend",
       };
   
       const apiUrl = apiEndpoints[updatedCategory];

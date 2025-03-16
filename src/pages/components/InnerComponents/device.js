@@ -29,11 +29,11 @@ const Device = () => {
       setError(null);
 
       const apiEndpoints = {
-        pdf: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/pdf/device",
-        web: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/device",
-        weblink: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/web/device",
-        video: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/device",
-        docx: "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/docx/device",
+        pdf: "https://admin-dashboard-backend-emwx.vercel.app/api/v1/pdf/device",
+        web: "https://admin-dashboard-backend-emwx.vercel.app/api/v1/web/device",
+        weblink: "https://admin-dashboard-backend-emwx.vercel.app/api/v1/web/device",
+        video: "https://admin-dashboard-backend-emwx.vercel.app/api/v1/video/device",
+        docx: "https://admin-dashboard-backend-emwx.vercel.app/api/v1/docx/device",
       };
 
       const apiUrl = apiEndpoints[updatedCategory];

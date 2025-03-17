@@ -30,8 +30,8 @@ const Mostviewpage = () => {
         // Determine the API endpoint dynamically
         const endpoint =
           category === "docx" || category === "doc"
-            ? "https://admin-dashboard-backend-emwx.vercel.app/api/v1/docx/viewanalytics"
-            : "https://admin-dashboard-backend-emwx.vercel.app/api/v1/pdf/viewanalytics";
+            ? "https://admin-dashboard-backend-rust.vercel.app/api/v1/docx/viewanalytics"
+            : "https://admin-dashboard-backend-rust.vercel.app/api/v1/pdf/viewanalytics";
   
         const response = await fetch(endpoint, {
           method: "POST",

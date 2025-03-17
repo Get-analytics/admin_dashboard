@@ -21,7 +21,7 @@ const HeatmapCard = () => {
           setError(null);
 
           const updatedCategory = category === 'Web' ? 'weblink' : category;
-          const apiUrl = 'https://admin-dashboard-backend-emwx.vercel.app/api/v1/web/heatmap';
+          const apiUrl = 'https://admin-dashboard-backend-rust.vercel.app/api/v1/web/heatmap';
           const requestBody = {
             uuid,
             url,

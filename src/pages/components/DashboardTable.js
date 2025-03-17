@@ -96,7 +96,7 @@ const DashboardTable = ({
     setLoading(true);
     try {
       const response = await fetch(
-        "https://admin-dashboard-backend-emwx.vercel.app/api/v1/removesession",
+        "https://admin-dashboard-backend-rust.vercel.app/api/v1/removesession",
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },

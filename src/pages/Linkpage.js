@@ -220,7 +220,7 @@ const Linkpage = () => {
         payload = { shortId: randomId, originalUrl: url, uuid: userInfo.uuid };
         headers["Content-Type"] = "application/json";
       } else if (type === "file") {
-        apiEndpoint = "https://admin-dashboard-backend-rust.vercel.app/api/v1/fileupload";
+        apiEndpoint = "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/fileupload";
         payload = new FormData();
         payload.append("shortId", randomId);
         payload.append("file", file);

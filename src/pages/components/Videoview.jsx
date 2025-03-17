@@ -79,7 +79,7 @@ const VimeoLikeRetention = () => {
         if (!uuid || !token || !url || !category) return;
 
         const endpoint =
-          "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/video/viewanalytics";
+          "https://admin-dashboard-backend-rust.vercel.app/api/v1/video/viewanalytics";
 
         const response = await fetch(endpoint, {
           method: "POST",

@@ -63,7 +63,7 @@ const Linkpage = () => {
   const fetchDashboardData = async (authToken, UUID) => {
     try {
       const response = await axios.post(
-        "https://admin-dashboard-backend-rust.vercel.app/api/v1/client/dashboard",
+        "http://157.245.111.244:5000/api/v1/client/dashboard",
         { authToken, UUID }
       );
       if (response.status === 200) {
@@ -89,7 +89,7 @@ const Linkpage = () => {
     const payload = { url, uuid, token };
     try {
       const response = await axios.post(
-        "https://admin-dashboard-backend-rust.vercel.app/api/v1/analytics",
+        "http://157.245.111.244:5000/api/v1/analytics",
         payload
       );
       console.log("Analytics data:", response.data);
@@ -220,7 +220,7 @@ const Linkpage = () => {
         payload = { shortId: randomId, originalUrl: url, uuid: userInfo.uuid };
         headers["Content-Type"] = "application/json";
       } else if (type === "file") {
-        apiEndpoint = "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/fileupload";
+        apiEndpoint = "http://157.245.111.244:5000/api/v1/fileupload";
         payload = new FormData();
         payload.append("shortId", randomId);
         payload.append("file", file);

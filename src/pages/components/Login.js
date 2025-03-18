@@ -23,7 +23,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://admin-dashboard-backend-gqqz.onrender.com/api/v1/login", { email, password });
+      const response = await axios.post("http://157.245.111.244:5000/api/v1/login", { email, password });
       localStorage.setItem("AuthToken", JSON.stringify(response.data.token));
       localStorage.setItem("UUID", JSON.stringify(response.data.uuid));
       toast.success("Login successful");

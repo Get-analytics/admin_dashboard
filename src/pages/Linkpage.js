@@ -63,7 +63,7 @@ const Linkpage = () => {
   const fetchDashboardData = async (authToken, UUID) => {
     try {
       const response = await axios.post(
-        "http://157.245.111.244:5000/api/v1/client/dashboard",
+        "https://api.sendnow.live/api/v1/client/dashboard",
         { authToken, UUID }
       );
       if (response.status === 200) {
@@ -89,7 +89,7 @@ const Linkpage = () => {
     const payload = { url, uuid, token };
     try {
       const response = await axios.post(
-        "http://157.245.111.244:5000/api/v1/analytics",
+        "https://api.sendnow.live/api/v1/analytics",
         payload
       );
       console.log("Analytics data:", response.data);

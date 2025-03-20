@@ -96,7 +96,7 @@ const DashboardTable = ({
     setLoading(true);
     try {
       const response = await fetch(
-        "https://admin-dashboard-backend-rust.vercel.app/api/v1/removesession",
+        "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/removesession",
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -214,47 +214,91 @@ const DashboardTable = ({
       key: "analytics",
       align: "center",
       render: (text, record) => (
-        <Button
-          style={{
-            backgroundColor: "#7C5832",
-            borderRadius: "20px",
-            height: "30px",
-            cursor: "pointer",
-            border: "none",
-            color: "#fff",
-            padding: "0 12px",
-            fontFamily: "'DM Sans', sans-serif",
-            fontWeight: "300",
-          }}
-          onClick={() => {
-            const urlParts = record.url.split(
-              "https://view.sendnow.live"
-            );
-            const analyticsId = urlParts[1];
+<Button
+  style={{
+    backgroundColor: "#7C5832",
+    borderRadius: "20px",
+    height: "30px",
+    cursor: "pointer",
+    border: "none",
+    color: "#fff",
+    padding: "0 12px",
+    fontFamily: "'DM Sans', sans-serif",
+    fontWeight: "300",
+  }}
+  onClick={() => {
+    try {
+      console.log("👉 Button clicked: View Analytics");
   
-            if (analyticsId) {
-              saveRecord({
-                uuid: record.key,
-                token: tokenStr,
-                url: record.url,
-                category: record.category,
-              });
+      // Check if the URL is valid before splitting
+      if (!record.url || typeof record.url !== "string") {
+        console.error("❌ Error: Invalid URL in record:", record.url);
+        alert("Invalid URL. Please check the record.");
+        return;
+      }
   
-              navigate(`/dashboard/${record.category}/${analyticsId}`, {
-                state: {
-                  uuid: record.key,
-                  token: tokenStr,
-                  url: record.url,
-                  category: record.category,
-                },
-              });
-            } else {
-              console.error("Invalid URL format");
-            }
-          }}
-        >
-          View Analytics
-        </Button>
+      console.log(`✅ URL Found: ${record.url}`);
+  
+      // Split the URL to extract the analyticsId
+      const urlParts = record.url.split("https://view.sendnow.live/");
+      let analyticsId = urlParts[1];
+  
+      // Log split URL info
+      console.log("🔎 URL Parts:", urlParts);
+      console.log(`📊 Extracted Analytics ID: ${analyticsId || "N/A"}`);
+  
+      // Remove leading slash if present
+      if (analyticsId && analyticsId.startsWith("/")) {
+        analyticsId = analyticsId.replace(/^\//, ""); // Remove leading slash
+        console.log(`✅ Cleaned Analytics ID: ${analyticsId}`);
+      }
+  
+      // Check if analyticsId is valid
+      if (analyticsId) {
+        console.log("✅ Valid Analytics ID. Proceeding to save and navigate...");
+  
+        // Log record info before saving
+        console.log("📚 Record Info:", {
+          uuid: record.key,
+          token: tokenStr,
+          url: record.url,
+          category: record.category,
+        });
+  
+        // Save record
+        saveRecord({
+          uuid: record.key,
+          token: tokenStr,
+          url: record.url,
+          category: record.category,
+        });
+  
+        console.log("✅ Record saved successfully!");
+  
+        // Log navigation info
+        console.log(`🚀 Navigating to /dashboard/${record.category}/${analyticsId}`);
+        navigate(`/dashboard/${record.category}/${analyticsId}`, {
+          state: {
+            uuid: record.key,
+            token: tokenStr,
+            url: record.url,
+            category: record.category,
+          },
+        });
+      } else {
+        console.error("❌ Error: Invalid URL format. No analytics ID found.");
+        alert("Invalid URL format. Unable to extract analytics ID.");
+      }
+    } catch (error) {
+      console.error("❌ Unexpected error occurred:", error);
+      alert(`An error occurred: ${error.message}`);
+    }
+  }}
+  
+>
+  View Analytics
+</Button>
+
       ),
     },
     {

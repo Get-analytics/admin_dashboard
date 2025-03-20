@@ -228,7 +228,7 @@ const DashboardTable = ({
           }}
           onClick={() => {
             const urlParts = record.url.split(
-              "https://filescence-rho.vercel.app/"
+              "https://view.sendnow.live"
             );
             const analyticsId = urlParts[1];
   

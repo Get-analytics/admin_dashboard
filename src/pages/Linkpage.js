@@ -247,7 +247,7 @@ const handleGenerateLink = async (type) => {
     if (response.status === 200) {
       let link = "";
       if (type === "url" && response.data.shortenedUrl) {
-        link = `https://view.sendnow.live/${response.data.shortenedUrl.shortId}`;
+        link = `https://view.sendnow.live/${response.data.shortenedUrl.shortId}` ;
       } else if (type === "file" && response.data.shortId) {
         link = `https://view.sendnow.live/${response.data.shortId}`;
       }

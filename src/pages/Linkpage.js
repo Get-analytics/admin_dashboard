@@ -227,7 +227,7 @@ const handleGenerateLink = async (type) => {
 
   try {
     if (type === "url") {
-      apiEndpoint = "https://admin-dashboard-backend-gqqz.onrender.com/api/v1/linkupload";
+      apiEndpoint = "https://admin-dashboard-backend-rust.vercel.app/api/v1/linkupload";
       payload = { shortId: randomId, originalUrl: url, uuid: userInfo.uuid };
       headers["Content-Type"] = "application/json";
     } else if (type === "file") {

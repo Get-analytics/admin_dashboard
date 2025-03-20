@@ -23,7 +23,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://api.sendnow.live/api/v1/login", { email, password });
+      const response = await axios.post("https://admin-dashboard-backend-rust.vercel.app/api/v1/login", { email, password });
       localStorage.setItem("AuthToken", JSON.stringify(response.data.token));
       localStorage.setItem("UUID", JSON.stringify(response.data.uuid));
       toast.success("Login successful");
